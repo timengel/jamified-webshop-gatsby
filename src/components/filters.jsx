@@ -1,12 +1,12 @@
-import * as React from "react"
-import { CheckFilter } from "./check-filter"
-import { CurrencyField } from "./currency-field"
+import * as React from 'react';
+import { CheckFilter } from './check-filter';
+import { CurrencyField } from './currency-field';
 import {
-  priceFilterStyle,
   clearButton,
   priceFields,
+  priceFilterStyle,
   summary,
-} from "./filters.module.css"
+} from './filters.module.css';
 
 export function Filters({
   currencyCode,
@@ -17,25 +17,25 @@ export function Filters({
   setFilters,
 }) {
   const updateFilter = (key, value) => {
-    setFilters((filters) => ({ ...filters, [key]: value }))
-  }
+    setFilters((filters) => ({ ...filters, [key]: value }));
+  };
 
   const updateNumeric = (key, value) => {
     if (
       !isNaN(Number(value)) ||
-      (value.endsWith(".") && !isNaN(Number(value.substring(0, -1))))
+      (value.endsWith('.') && !isNaN(Number(value.substring(0, -1))))
     ) {
-      updateFilter(key, value)
+      updateFilter(key, value);
     }
-  }
+  };
 
   return (
     <>
       <CheckFilter
-        name="Type"
+        name='Type'
         items={productTypes}
         selectedItems={filters.productTypes}
-        setSelectedItems={(value) => updateFilter("productTypes", value)}
+        setSelectedItems={(value) => updateFilter('productTypes', value)}
       />
       <hr />
       <details className={priceFilterStyle} open={true}>
@@ -48,8 +48,8 @@ export function Filters({
                 onClick={() =>
                   setFilters((filters) => ({
                     ...filters,
-                    maxPrice: "",
-                    minPrice: "",
+                    maxPrice: '',
+                    minPrice: '',
                   }))
                 }
               >
@@ -61,38 +61,38 @@ export function Filters({
         <div className={priceFields}>
           <CurrencyField
             {...currencyCode}
-            aria-label="Minimum price"
+            aria-label='Minimum price'
             value={filters.minPrice}
             onChange={(event) =>
-              updateNumeric("minPrice", event.currentTarget.value)
+              updateNumeric('minPrice', event.currentTarget.value)
             }
-          />{" "}
-          –{" "}
+          />{' '}
+          –{' '}
           <CurrencyField
             {...currencyCode}
-            aria-label="Maximum price"
+            aria-label='Maximum price'
             value={filters.maxPrice}
             onChange={(event) =>
-              updateNumeric("maxPrice", event.currentTarget.value)
+              updateNumeric('maxPrice', event.currentTarget.value)
             }
           />
         </div>
       </details>
       <hr />
       <CheckFilter
-        name="Brands"
+        name='Brands'
         items={vendors}
         selectedItems={filters.vendors}
-        setSelectedItems={(value) => updateFilter("vendors", value)}
+        setSelectedItems={(value) => updateFilter('vendors', value)}
       />
       <hr />
       <CheckFilter
         open={true}
-        name="Tags"
+        name='Tags'
         items={tags}
         selectedItems={filters.tags}
-        setSelectedItems={(value) => updateFilter("tags", value)}
+        setSelectedItems={(value) => updateFilter('tags', value)}
       />
     </>
-  )
+  );
 }

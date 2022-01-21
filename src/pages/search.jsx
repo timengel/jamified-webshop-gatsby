@@ -1,20 +1,20 @@
-import * as React from "react"
-import { graphql } from "gatsby"
-import slugify from "@sindresorhus/slugify"
-import debounce from "debounce"
-import { CgChevronRight, CgChevronLeft } from "react-icons/cg"
-import { Layout } from "../components/layout"
-import CrossIcon from "../icons/cross"
-import SortIcon from "../icons/sort"
-import FilterIcon from "../icons/filter"
-import SearchIcon from "../icons/search"
-import { ProductCard } from "../components/product-card"
-import { useProductSearch } from "../utils/hooks"
-import { getValuesFromQuery } from "../utils/search"
-import { getCurrencySymbol } from "../utils/format-price"
-import { Spinner } from "../components/progress"
-import { Filters } from "../components/filters"
-import { SearchProvider } from "../context/search-provider"
+import * as React from 'react';
+import { graphql } from 'gatsby';
+import slugify from '@sindresorhus/slugify';
+import debounce from 'debounce';
+import { CgChevronRight, CgChevronLeft } from 'react-icons/cg';
+import { Layout } from '../components/layout';
+import CrossIcon from '../icons/cross';
+import SortIcon from '../icons/sort';
+import FilterIcon from '../icons/filter';
+import SearchIcon from '../icons/search';
+import { ProductCard } from '../components/product-card';
+import { useProductSearch } from '../utils/hooks';
+import { getValuesFromQuery } from '../utils/search';
+import { getCurrencySymbol } from '../utils/format-price';
+import { Spinner } from '../components/progress';
+import { Filters } from '../components/filters';
+import { SearchProvider } from '../context/search-provider';
 import {
   visuallyHidden,
   main,
@@ -38,23 +38,23 @@ import {
   activeFilters,
   filterWrap,
   emptyState,
-} from "./search-page.module.css"
+} from './search-page.module.css';
 
-const DEFAULT_PRODUCTS_PER_PAGE = 24
+const DEFAULT_PRODUCTS_PER_PAGE = 24;
 
 export async function getServerData({ query, ...rest }) {
-  const { getSearchResults } = require("../utils/search")
+  const { getSearchResults } = require('../utils/search');
   const products = await getSearchResults({
     query,
     count: DEFAULT_PRODUCTS_PER_PAGE,
-  })
+  });
 
   return {
     props: {
       query,
       products,
     },
-  }
+  };
 }
 
 export const query = graphql`
@@ -65,7 +65,7 @@ export const query = graphql`
       vendors: distinct(field: vendor)
     }
   }
-`
+`;
 
 function SearchPage({
   serverData,
@@ -75,17 +75,17 @@ function SearchPage({
   location,
 }) {
   // These default values come from the page query string
-  const queryParams = getValuesFromQuery(location.search || serverData.query)
+  const queryParams = getValuesFromQuery(location.search || serverData.query);
 
-  const [filters, setFilters] = React.useState(queryParams)
+  const [filters, setFilters] = React.useState(queryParams);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const initialFilters = React.useMemo(() => queryParams, [])
-  const [sortKey, setSortKey] = React.useState(queryParams.sortKey)
+  const initialFilters = React.useMemo(() => queryParams, []);
+  const [sortKey, setSortKey] = React.useState(queryParams.sortKey);
   // We clear the hash when searching, we want to make sure the next page will be fetched due the #more hash.
-  const shouldLoadNextPage = React.useRef(false)
+  const shouldLoadNextPage = React.useRef(false);
 
   // This modal is only used on mobile
-  const [showModal, setShowModal] = React.useState(false)
+  const [showModal, setShowModal] = React.useState(false);
 
   const {
     products,
@@ -106,8 +106,8 @@ function SearchPage({
     false,
     DEFAULT_PRODUCTS_PER_PAGE,
     serverData.products,
-    initialFilters
-  )
+    initialFilters,
+  );
 
   // Scroll up when navigating
   React.useEffect(() => {
@@ -115,40 +115,40 @@ function SearchPage({
       window.scrollTo({
         top: 0,
         left: 0,
-        behavior: "smooth",
+        behavior: 'smooth',
         // eslint-disable-next-line react-hooks/exhaustive-deps
-      })
+      });
     }
-  }, [products, showModal])
+  }, [products, showModal]);
 
   // Stop page from scrolling when modal is visible
   React.useEffect(() => {
     if (showModal) {
-      document.documentElement.style.overflow = "hidden"
+      document.documentElement.style.overflow = 'hidden';
     } else {
-      document.documentElement.style.overflow = ""
+      document.documentElement.style.overflow = '';
     }
-  }, [showModal])
+  }, [showModal]);
 
   // Automatically load the next page if "#more" is in the URL
   React.useEffect(() => {
-    if (location.hash === "#more") {
+    if (location.hash === '#more') {
       // save state so we can fetch it when the first page got fetched to retrieve the cursor
-      shouldLoadNextPage.current = true
+      shouldLoadNextPage.current = true;
     }
 
     if (shouldLoadNextPage.current) {
       if (hasNextPage) {
-        fetchNextPage()
+        fetchNextPage();
       }
 
-      shouldLoadNextPage.current = false
+      shouldLoadNextPage.current = false;
     }
-  }, [location.hash, hasNextPage, fetchNextPage])
+  }, [location.hash, hasNextPage, fetchNextPage]);
 
   const currencyCode = getCurrencySymbol(
-    serverData.products?.[0]?.node?.priceRangeV2?.minVariantPrice?.currencyCode
-  )
+    serverData.products?.[0]?.node?.priceRangeV2?.minVariantPrice?.currencyCode,
+  );
 
   return (
     <Layout>
@@ -160,7 +160,7 @@ function SearchPage({
             className={[
               filterButton,
               filterCount ? activeFilters : undefined,
-            ].join(" ")}
+            ].join(' ')}
             onClick={() => setShowModal((show) => !show)}
             // This is hidden because the filters are already visible to
             // screenreaders, so the modal isnt needed.
@@ -176,17 +176,17 @@ function SearchPage({
                 // eslint-disable-next-line
                 onChange={(e) => setSortKey(e.target.value)}
               >
-                <option value="RELEVANCE">Relevance</option>
-                <option value="PRICE">Price</option>
-                <option value="TITLE">Title</option>
-                <option value="CREATED_AT">New items</option>
-                <option value="BEST_SELLING">Trending</option>
+                <option value='RELEVANCE'>Relevance</option>
+                <option value='PRICE'>Price</option>
+                <option value='TITLE'>Title</option>
+                <option value='CREATED_AT'>New items</option>
+                <option value='BEST_SELLING'>Trending</option>
               </select>
             </label>
             <SortIcon className={sortIcon} />
           </div>
         </div>
-        <section className={[filterStyle, showModal && modalOpen].join(" ")}>
+        <section className={[filterStyle, showModal && modalOpen].join(' ')}>
           <div className={filterTitle}>
             <h2>Filter</h2>
             <button aria-hidden onClick={() => setShowModal(false)}>
@@ -211,12 +211,12 @@ function SearchPage({
         >
           {isFetching ? (
             <p className={progressStyle}>
-              <Spinner aria-valuetext="Searching" /> Searching
+              <Spinner aria-valuetext='Searching' /> Searching
               {filters.term ? ` for "${filters.term}"…` : `…`}
             </p>
           ) : (
             <p className={resultsStyle}>
-              Search results{" "}
+              Search results{' '}
               {filters.term && (
                 <>
                   for "<span>{filters.term}</span>"
@@ -260,48 +260,49 @@ function SearchPage({
         </section>
       </div>
     </Layout>
-  )
+  );
 }
 
 function SearchBar({ defaultTerm, setFilters }) {
-  const [term, setTerm] = React.useState(defaultTerm)
+  const [term, setTerm] = React.useState(defaultTerm);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSetFilters = React.useCallback(
     debounce((value) => {
-      setFilters((filters) => ({ ...filters, term: value }))
+      setFilters((filters) => ({ ...filters, term: value }));
     }, 200),
-    [setFilters]
-  )
+    [setFilters],
+  );
 
   return (
     <form onSubmit={(e) => e.preventDefault()} className={searchForm}>
       <SearchIcon aria-hidden className={searchIcon} />
       <input
-        type="text"
+        type='text'
         value={term}
         onChange={(e) => {
-          setTerm(e.target.value)
-          debouncedSetFilters(e.target.value)
+          setTerm(e.target.value);
+          debouncedSetFilters(e.target.value);
         }}
-        placeholder="Search..."
+        placeholder='Search...'
       />
       {term ? (
         <button
           className={clearSearch}
-          type="reset"
+          type='reset'
           onClick={() => {
-            setTerm("")
-            setFilters((filters) => ({ ...filters, term: "" }))
+            setTerm('');
+            setFilters((filters) => ({ ...filters, term: '' }));
           }}
-          aria-label="Clear search query"
+          aria-label='Clear search query'
         >
           <CrossIcon />
         </button>
       ) : undefined}
     </form>
-  )
+  );
 }
+
 /**
  * Shopify only supports next & previous navigation
  */
@@ -312,7 +313,7 @@ function Pagination({ previousPage, hasPreviousPage, nextPage, hasNextPage }) {
         className={paginationButton}
         disabled={!hasPreviousPage}
         onClick={previousPage}
-        aria-label="Previous page"
+        aria-label='Previous page'
       >
         <CgChevronLeft />
       </button>
@@ -320,12 +321,12 @@ function Pagination({ previousPage, hasPreviousPage, nextPage, hasNextPage }) {
         className={paginationButton}
         disabled={!hasNextPage}
         onClick={nextPage}
-        aria-label="Next page"
+        aria-label='Next page'
       >
         <CgChevronRight />
       </button>
     </nav>
-  )
+  );
 }
 
 export default function SearchPageTemplate(props) {
@@ -333,5 +334,5 @@ export default function SearchPageTemplate(props) {
     <SearchProvider>
       <SearchPage {...props} />
     </SearchProvider>
-  )
+  );
 }

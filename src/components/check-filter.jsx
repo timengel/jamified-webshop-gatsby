@@ -1,12 +1,12 @@
-import * as React from "react"
+import * as React from 'react';
 import {
-  filter,
-  summary,
-  filterOptions,
-  clearButton,
-  selectedLabel,
   checkbox,
-} from "./check-filter.module.css"
+  clearButton,
+  filter,
+  filterOptions,
+  selectedLabel,
+  summary,
+} from './check-filter.module.css';
 
 export function CheckFilter({
   items,
@@ -17,30 +17,30 @@ export function CheckFilter({
 }) {
   const toggleItem = ({ currentTarget: input }) => {
     if (input.checked) {
-      setSelectedItems([...selectedItems, input.value])
+      setSelectedItems([...selectedItems, input.value]);
     } else {
-      const idx = selectedItems.indexOf(input.value)
+      const idx = selectedItems.indexOf(input.value);
       if (idx === -1) {
-        return
+        return;
       }
       const newItems = [
         ...selectedItems.slice(0, idx),
         ...selectedItems.slice(idx + 1),
-      ]
-      setSelectedItems(newItems)
+      ];
+      setSelectedItems(newItems);
     }
-  }
+  };
 
   const clearItems = () => {
-    setSelectedItems([])
-  }
+    setSelectedItems([]);
+  };
 
   return (
     <details open={open} className={filter}>
       {name && (
         <summary>
           <div className={summary}>
-            {name}{" "}
+            {name}{' '}
             {selectedItems.length ? (
               <button className={clearButton} onClick={clearItems}>
                 Clear
@@ -56,16 +56,16 @@ export function CheckFilter({
             key={item}
           >
             <input
-              type="checkbox"
+              type='checkbox'
               className={checkbox}
               onChange={toggleItem}
               value={item}
               checked={selectedItems.includes(item)}
-            />{" "}
-            {item || "None"}
+            />{' '}
+            {item || 'None'}
           </label>
         ))}
       </div>
     </details>
-  )
+  );
 }
